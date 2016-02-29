@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// Package Toolbox is a package that simplifies the handling graphics, windows and
+// Package toolbox is a package that simplifies the handling graphics, windows and
 // key presses offered by the underlying SDL library.
 // The package is not intended as a generic game library or as a simplification
 // of the SDL library. The package is intended solely for use in the Code Club
@@ -26,6 +26,9 @@ type Graphic *sdl.Texture
 
 // Window is the type of the window that the game takes place within.
 type Window *sdl.Window
+
+// Key is the type that represents the key or window button that has been pressed.
+type Key int
 
 // Possible constants returned from GetKey()
 const (
@@ -219,7 +222,7 @@ func RenderGraphic(g Graphic, x, y, width, height int) {
 // 2. If an internal check fails. In this case the panic message is "KeyDownEvent type assertion failed!"
 // This is highly unlikely to occur and indcates a problem with the underlying
 // graphics llibrary.
-func GetKey() int {
+func GetKey() Key {
 	if !initialised {
 		// this stops execution here, so ne need for an else after the if
 		panic(notInitialisedMessage)
