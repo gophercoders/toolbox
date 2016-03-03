@@ -370,7 +370,7 @@ func SetBackgroundColour(r, g, b int) {
 		panic("One of r, g, or b is less than zero or greater than 255.")
 	}
 	if renderer != nil {
-		renderer.SetDrawColor(0, 0, 0, 0)
+		renderer.SetDrawColor(uint8(r), uint8(g), uint8(b), 0)
 	} else {
 		panic(noRenderer)
 	}
