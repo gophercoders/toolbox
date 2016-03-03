@@ -30,6 +30,10 @@ type Window *sdl.Window
 // Key is the type that represents the key or window button that has been pressed.
 type Key int
 
+// Colour is the tye that represens a solout, held as a Read, Green Blue, Alpha tuple.
+// Note: the English spelling.
+type Colour sdl.Color
+
 // Possible constants returned from GetKey()
 const (
 	KeyNone     = iota // no key was pressed
@@ -274,7 +278,7 @@ func GetKey() Key {
 // 3. CreateWindow has been called more than once.
 func CreateWindow(title string, width, height int) Window {
 	if !initialised {
-		// this stops execution here, so ne need for an else after the if
+		// this stops execution here, so no need for an else after the if
 		panic(notInitialisedMessage)
 	}
 	if width < 0 || height < 0 {
@@ -341,7 +345,7 @@ func ShowWindow() {
 }
 
 // SetBackgroundColour sets the background colour of the window.
-// This is the colur that will be used to fill the window when ClearBackground()
+// This is the colour that will be used to fill the window when ClearBackground()
 // is called.
 // The effect will not be seen until ShowWindow is called.
 //
