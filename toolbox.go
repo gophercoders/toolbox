@@ -48,6 +48,7 @@ const (
 	nilGraphicMessage           = "The Graphic is invalid. Have you loaded the Graphic using toolbox.LoadGraphic(filename)?"
 	windowNotInitialisedMessage = "The window has not been created. Have you called toolbox.CreateWindow(...)?"
 	noRenderer                  = "No Renderer. Have you called toolbox.CreateWindow(...)?"
+	couldNotDrawPoint           = "The point could not be plotted. Something very bad has happened."
 )
 
 // This the abstraction to the graphics hardware inside the computer
@@ -375,6 +376,35 @@ func SetBackgroundColour(r, g, b int) {
 	}
 }
 
+// SetDrawColour sets the colour that will be used when a point is plotted.
+// The effect will not be seen until after DrawPoint and ShowWindow
+// have been called.
+//
+// The colour is specified as a Colour type.
+//
+// SetDrawColour panics if:
+//
+// 1. The toolbox has not been initialised.
+//
+// 2. CreateWindow has not been called.
+//
+// 3. If any of red, green, blue, or alpha components of the colour
+// are outside of the range [0..255].
+func SetDrawColour(c Colour) {
+	if !initialised {
+		// this stops execution here, so ne need for an else after the if
+		panic(notInitialisedMessage)
+	}
+	if c.R < 0 || c.R > 255 || c.G < 0 || c.G > 255 || c.B < 0 || c.B > 255 || c.A < 0 || c.A > 255 {
+		panic("One of the r, g, b or alpha values in the colour is less than zero or greater than 255.")
+	}
+	if renderer != nil {
+		renderer.SetDrawColor(c.R, c.G, c.B, c.A)
+	} else {
+		panic(noRenderer)
+	}
+}
+
 // ClearBackground clears the window using the background colour set with
 // SetBackgroundColour
 // The effect will not be seen until ShowWindow is called.
@@ -392,6 +422,35 @@ func ClearBackground() {
 	}
 	if renderer != nil {
 		renderer.Clear()
+	} else {
+		panic(noRenderer)
+	}
+}
+
+// DrawPoint plots a single point (pixel) on the screen.
+// The colour is set via SetDrawColour.
+// The effect will not be seen until after ShowWindow has been called.
+//
+// The colour is specified as a Colour type.
+//
+// DrawPoint panics if:
+//
+// 1. The toolbox has not been initialised.
+//
+// 2. CreateWindow has not been called.
+//
+// 3. Plotting the point itself fails. This would indicate in internal invarient failure.
+func DrawPoint(x, y int) {
+	if !initialised {
+		// this stops execution here, so ne need for an else after the if
+		panic(notInitialisedMessage)
+	}
+	if renderer != nil {
+		var err error
+		err = renderer.DrawPoint(x, y)
+		if err != nil {
+			panic(couldNotDrawPoint)
+		}
 	} else {
 		panic(noRenderer)
 	}
